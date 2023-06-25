@@ -1,0 +1,31 @@
+.button {
+    -fx-background-color: transparent;
+    -fx-padding: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 0);
+    -fx-transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.button:hover {
+    -fx-scale-x: 1.15;
+    -fx-scale-y: 1.15;
+}
+
+.button:hover .image-view {
+    -fx-scale-x: 1.15;
+    -fx-scale-y: 1.15;
+}
+
+.button-black {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+    -fx-background-radius: 20px;
+    -fx-padding: 5px 10px;
+}
+
+.button-black:hover {
+    -fx-background-color: darkgray;
+}
+
+.button-black:pressed {
+    -fx-background-color: gray;
+}

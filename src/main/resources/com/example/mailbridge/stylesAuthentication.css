@@ -1,0 +1,45 @@
+.button {
+    -fx-background-color: black;
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-background-color: gray;
+    -fx-scale-x: 1.15;
+    -fx-scale-y: 1.15;
+}
+
+.button:hover .image-view {
+    -fx-scale-x: 1.15;
+    -fx-scale-y: 1.15;
+}
+
+.text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent black transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.check-box .box {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-radius: 5px;
+}
+
+.check-box:selected .box {
+    -fx-background-color: white;
+}
+
+
+.text-field .menu-item:hover,
+.text-field .menu-item:selected,
+.text-field .menu-item:focused {
+    -fx-background-color: black;
+}
+
+.password-field .menu-item:hover,
+.password-field .menu-item:selected,
+.password-field .menu-item:focused {
+    -fx-background-color: black;
+}

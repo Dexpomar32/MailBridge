@@ -1,0 +1,67 @@
+.button {
+    -fx-background-color: black;
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-background-color: gray;
+}
+
+.text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent black transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.combo-box {
+    -fx-background-color: transparent;
+    -fx-text-fill: #000000;
+    -fx-font-size: 14px;
+    -fx-border-color: transparent transparent black transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.combo-box .list-cell:hover {
+    -fx-background-color: black;
+}
+
+.combo-box .list-view .list-cell:first-child {
+    -fx-background-color: black;
+}
+
+.combo-box .list-view .list-cell:selected {
+    -fx-background-color: black;
+}
+
+.progress-bar {
+    -fx-accent: black;
+    -fx-control-inner-background: transparent;
+}
+
+.text-field .menu-item:hover,
+.text-field .menu-item:selected,
+.text-field .menu-item:focused {
+    -fx-background-color: black;
+}
+
+.radio-button .radio {
+    -fx-border-color: black;
+    -fx-shape: "M 8 0 L 16 8 L 8 16 L 0 8 Z"; /* Форма круга */
+}
+
+.radio-button .radio:selected .dot {
+    -fx-background-color: white; /* Черный цвет для обводки и центральной точки */
+}
+
+.radio-button .radio:selected .dot {
+    -fx-background-color: black; /* Черный цвет для выбранной центральной точки */
+}
+
+.radio-button .radio:hover .dot {
+    -fx-background-color: gray; /* Серый цвет для центральной точки при наведении */
+}
+
+.radio-button .text {
+    -fx-text-fill: black; /* Черный цвет текста */
+}

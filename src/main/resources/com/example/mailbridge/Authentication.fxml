@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="500.0" prefWidth="700.0" stylesheets="@stylesAuthentication.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mailbridge.AuthenticationController">
+   <VBox layoutX="150.0" prefHeight="500.0" prefWidth="400.0">
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+         <ImageView fx:id="MailImageView" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../../../images/error.png" />
+         </ImageView>
+      </HBox>
+      <HBox fx:id="HostHBox" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+         <Label text="Host    ">
+            <font>
+               <Font name="AvenirLTStd-Book" size="20.0" />
+            </font>
+         </Label>
+         <TextField fx:id="HostTextField" prefHeight="30.0" prefWidth="250.0" styleClass="text-field">
+            <font>
+               <Font name="AvenirLTStd-Book" size="14.0" />
+            </font>
+            <tooltip>
+               <Tooltip fx:id="HostTooltip" text="Write host!">
+                  <font>
+                     <Font name="AvenirLTStd-Book" size="14.0" />
+                  </font>
+               </Tooltip>
+            </tooltip>
+         </TextField>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
+         <Label text="Username">
+            <font>
+               <Font name="AvenirLTStd-Book" size="20.0" />
+            </font>
+         </Label>
+         <TextField fx:id="UsernameTextField" prefHeight="30.0" prefWidth="250.0" styleClass="text-field">
+            <font>
+               <Font name="AvenirLTStd-Book" size="14.0" />
+            </font>
+            <tooltip>
+               <Tooltip fx:id="UsernameTooltip" text="Write username!">
+                  <font>
+                     <Font name="AvenirLTStd-Book" size="14.0" />
+                  </font>
+               </Tooltip>
+            </tooltip></TextField>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+         <Label text="Password">
+            <font>
+               <Font name="AvenirLTStd-Book" size="20.0" />
+            </font>
+         </Label>
+         <PasswordField fx:id="PasswordField" prefHeight="30.0" prefWidth="250.0">
+            <tooltip>
+               <Tooltip fx:id="PasswordTooltip" text="Write password!">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Tooltip>
+            </tooltip></PasswordField>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+         <CheckBox fx:id="SSLCheckBox" mnemonicParsing="false" selected="true" styleClass="check-box" text="SSL">
+            <font>
+               <Font name="AvenirLTStd-Book" size="30.0" />
+            </font>
+         </CheckBox>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+         <Button fx:id="LoginButton" alignment="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Login">
+            <font>
+               <Font name="AvenirLTStd-Book" size="30.0" />
+            </font>
+         </Button>
+      </HBox>
+   </VBox>
+</AnchorPane>

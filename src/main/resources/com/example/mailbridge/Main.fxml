@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<?import java.net.URL?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mailbridge.MainController">
+   <VBox layoutX="50.0" layoutY="100.0" prefHeight="300.0" prefWidth="600.0">
+      <HBox alignment="CENTER" prefHeight="150.0" prefWidth="200.0" spacing="50.0">
+         <Button fx:id="GmailButton" styleClass="button">
+            <graphic>
+               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                  <Image fx:id="GmailImage" url="@../../../images/gmail.png"/>
+               </ImageView>
+            </graphic>
+         </Button>
+         <Button fx:id="AolButton" styleClass="button">
+            <graphic>
+               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                  <Image fx:id="AolImage" url="@../../../images/aol.png"/>
+               </ImageView>
+            </graphic>
+         </Button>
+         <Button fx:id="iCloudButton" styleClass="button">
+            <graphic>
+               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                  <Image fx:id="iCloudImage" url="@../../../images/icloud.png"/>
+               </ImageView>
+            </graphic>
+         </Button>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="150.0" prefWidth="200.0" spacing="50.0">
+         <Button fx:id="OutlookButton" styleClass="button">
+            <graphic>
+               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                  <Image fx:id="OutlookImage" url="@../../../images/outlook.png"/>
+               </ImageView>
+            </graphic>
+         </Button>
+         <Button fx:id="YahooButton" styleClass="button">
+            <graphic>
+               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                  <Image fx:id="YahooImage" url="@../../../images/yahoo.png"/>
+               </ImageView>
+            </graphic>
+         </Button>
+         <Button fx:id="YandexButton" styleClass="button">
+            <graphic>
+               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                  <Image fx:id="YandexImage" url="@../../../images/yandex.png"/>
+               </ImageView>
+            </graphic>
+         </Button>
+      </HBox>
+   </VBox>
+   <Label fx:id="MailNameLabel" alignment="CENTER" layoutX="50.0" layoutY="17.0" prefHeight="66.0" prefWidth="600.0">
+      <font>
+         <Font name="AvenirLTStd-Book" size="50.0" />
+      </font>
+   </Label>
+   <Button fx:id="OtherMailButton" layoutX="250.0" layoutY="417.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Other Mail" styleClass="button-black" />
+   <stylesheets>
+      <URL value="@stylesMain.css" />
+   </stylesheets>
+</AnchorPane>
