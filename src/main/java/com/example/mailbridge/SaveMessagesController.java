@@ -13,10 +13,12 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
-import java.util.Objects;
 import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import javax.mail.*;
 import javafx.scene.control.Alert.AlertType;
+
 
 public class SaveMessagesController {
     @FXML
@@ -45,7 +47,7 @@ public class SaveMessagesController {
 
     private final DataSingleton data = DataSingleton.getInstance();
 
-    Path desktopPath = Paths.get(System.getProperty("user.home"), "Desktop");
+    final Path desktopPath = Paths.get(System.getProperty("user.home"), "Desktop");
 
     private String tag = "", FolderName, URL, host, username, password, FilePath;
 
@@ -108,10 +110,7 @@ public class SaveMessagesController {
         host = data.getImapAddress();
         username = data.getUsername();
         password = data.getPassword();
-
-        if (!Objects.equals(tag, ""))
-            FilePath = URL + "\\" + FolderName.substring(FolderName.lastIndexOf("/") + 1);
-        else FilePath = URL + "\\" + FolderName;
+        FilePath = URL + "\\" + FolderName;
 
         if (data.getSSL())
             port = 993;
@@ -143,7 +142,7 @@ public class SaveMessagesController {
             Message[] messages = emailFolder.getMessages();
             savedMessagesCount = messages.length;
 
-            BufferedWriter mboxWriter = new BufferedWriter(new FileWriter(FilePath + ".mbox"));
+            BufferedWriter mboxWriter = new BufferedWriter(new FileWriter(FilePath.replace("/", ".") + ".mbox"));
 
             double progress = 0.0;
             Platform.runLater(() -> MessagesSavingProgress.setProgress(0.0));
@@ -175,28 +174,22 @@ public class SaveMessagesController {
             store.close();
 
             showAlert(AlertType.INFORMATION, "Success", " Mbox file saved successfully. Saved messages: " + savedMessagesCount);
-            MessagesSavingProgress.setProgress(0.0);
         } catch (MessagingException | IOException e) {
             e.printStackTrace();
             showAlert(AlertType.ERROR, "Error", "An error occurred while saving Mbox file.");
-            MessagesSavingProgress.setProgress(0.0);
         }
 
-        MessagesSavingProgress.setVisible(false);
+        Platform.runLater(() -> {
+            PercentsLabel.setText("");
+            MessagesSavingProgress.setProgress(0.0);
+            MessagesSavingProgress.setVisible(false);
+        });
     }
 
     private void saveMIME() {
-        String host = data.getImapAddress();
-        String username = data.getUsername();
-        String password = data.getPassword();
-        String mboxFilePath = URLTextField.getText() + "\\" + FolderTextField.getText() + ".mime";
-        int port;
-
-        if (data.getSSL())
-            port = 993;
-        else port = 143;
-
         try {
+            MessagesSavingProgress.setVisible(true);
+
             Properties properties = new Properties();
             properties.setProperty("mail.store.protocol", "imaps");
             properties.setProperty("mail.imap.port", String.valueOf(port));
@@ -205,49 +198,133 @@ public class SaveMessagesController {
             Store store = session.getStore("imaps");
             store.connect(host, username, password);
 
-            Folder emailFolder = store.getFolder(FolderTextField.getText());
-            emailFolder.open(Folder.READ_WRITE);
+            Folder emailFolder;
+
+            if (!Type)
+                emailFolder = store.getFolder(tag + FolderName);
+            else
+                emailFolder = store.getFolder(FolderName);
+
+            assert emailFolder != null;
+            emailFolder.open(Folder.READ_ONLY);
 
             Message[] messages = emailFolder.getMessages();
-            savedMessagesCount = 0;
+            savedMessagesCount = messages.length;
 
-            BufferedWriter mimeWriter = new BufferedWriter(new FileWriter(mboxFilePath));
+            File zipFile = new File(FilePath.replace("/", ".") + ".zip");
 
-            for (Message message : messages) {
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                message.writeTo(outputStream);
+            try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipFile))) {
+                double progress = 0.0;
+                Platform.runLater(() -> MessagesSavingProgress.setProgress(0.0));
 
-                mimeWriter.write(outputStream.toString());
-                mimeWriter.write("\n\n");
+                for (int i = 0; i < messages.length; i++) {
+                    Message message = messages[i];
 
-                savedMessagesCount++;
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    message.writeTo(outputStream);
+
+                    String entryName = "message_" + (i + 1) + ".mime";
+                    ZipEntry zipEntry = new ZipEntry(entryName);
+                    zipOutputStream.putNextEntry(zipEntry);
+
+                    zipOutputStream.write(outputStream.toByteArray());
+                    zipOutputStream.closeEntry();
+
+                    progress += 1.0 / savedMessagesCount;
+                    final double currentProgress = progress;
+
+                    Platform.runLater(() -> MessagesSavingProgress.setProgress(currentProgress));
+
+                    DecimalFormat decimalFormat = new DecimalFormat("0");
+                    String progressText = decimalFormat.format(currentProgress * 100) + "%";
+
+                    Platform.runLater(() -> PercentsLabel.setText(progressText));
+                }
             }
-
-            mimeWriter.close();
 
             emailFolder.close(false);
             store.close();
 
-            showAlert(AlertType.INFORMATION, "Success", "MIME file saved successfully. Saved messages: " + savedMessagesCount);
-        } catch (MessagingException e) {
+            showAlert(AlertType.INFORMATION, "Success", "MIME files saved as a zip archive. Saved messages: " + savedMessagesCount);
+        } catch (MessagingException | IOException e) {
             e.printStackTrace();
-            showAlert(AlertType.ERROR, "Error", "An error occurred while accessing the email folder or messages.");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert(AlertType.ERROR, "Error", "An error occurred while saving MIME file.");
+            showAlert(AlertType.ERROR, "Error", "An error occurred while saving MIME files as a zip archive.");
         }
+
+        Platform.runLater(() -> {
+            PercentsLabel.setText("");
+            MessagesSavingProgress.setProgress(0.0);
+            MessagesSavingProgress.setVisible(false);
+        });
     }
 
     private void saveEML() {
+        try {
+            MessagesSavingProgress.setVisible(true);
 
-    }
+            Properties properties = new Properties();
+            properties.setProperty("mail.store.protocol", "imaps");
+            properties.setProperty("mail.imap.port", String.valueOf(port));
 
-    private void saveMSG() {
+            Session session = Session.getInstance(properties);
+            Store store = session.getStore("imaps");
+            store.connect(host, username, password);
 
-    }
+            Folder emailFolder;
 
-    private void saveEMLX() {
+            if (!Type)
+                emailFolder = store.getFolder(tag + FolderName);
+            else
+                emailFolder = store.getFolder(FolderName);
 
+            assert emailFolder != null;
+            emailFolder.open(Folder.READ_ONLY);
+
+            Message[] messages = emailFolder.getMessages();
+            savedMessagesCount = messages.length;
+
+            File zipFile = new File(FilePath.replace("/", ".") + ".zip");
+
+            try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipFile))) {
+                double progress = 0.0;
+                Platform.runLater(() -> MessagesSavingProgress.setProgress(0.0));
+
+                for (int i = 0; i < messages.length; i++) {
+                    Message message = messages[i];
+
+                    String entryName = "message_" + (i + 1) + ".eml";
+                    ZipEntry zipEntry = new ZipEntry(entryName);
+                    zipOutputStream.putNextEntry(zipEntry);
+
+                    message.writeTo(zipOutputStream);
+                    zipOutputStream.closeEntry();
+
+                    progress += 1.0 / savedMessagesCount;
+                    final double currentProgress = progress;
+
+                    Platform.runLater(() -> MessagesSavingProgress.setProgress(currentProgress));
+
+                    DecimalFormat decimalFormat = new DecimalFormat("0");
+                    String progressText = decimalFormat.format(currentProgress * 100) + "%";
+
+                    Platform.runLater(() -> PercentsLabel.setText(progressText));
+                }
+            }
+
+            emailFolder.close(false);
+            store.close();
+
+            showAlert(AlertType.INFORMATION, "Success", "EML files saved as a zip archive. Saved messages: " + savedMessagesCount);
+        } catch (MessagingException | IOException e) {
+            e.printStackTrace();
+            showAlert(AlertType.ERROR, "Error", "An error occurred while saving EML files as a zip archive.");
+        }
+
+        Platform.runLater(() -> {
+            PercentsLabel.setText("");
+            MessagesSavingProgress.setProgress(0.0);
+            MessagesSavingProgress.setVisible(false);
+        });
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
@@ -271,8 +348,6 @@ public class SaveMessagesController {
         options.add("Mbox");
         options.add("MIME");
         options.add("EML");
-        options.add("MSG");
-        options.add("EMLX");
 
         ExtensionComboBox.setItems(options);
         ExtensionComboBox.getSelectionModel().selectFirst();
@@ -283,27 +358,15 @@ public class SaveMessagesController {
             case "Mbox" -> saveMbox();
             case "MIME" -> saveMIME();
             case "EML" -> saveEML();
-            case "MSG" -> saveMSG();
-            case "EMLX" -> saveEMLX();
-            default -> {
-            }
+            default -> {}
         }
     }
 
     private void setTag() {
-    Platform.runLater(() -> {
         switch (data.getImapAddress()) {
-            case "imap.aol.com" -> tag = "[Aol]/";
+            case "imap.aol.com", "imap-mail.outlook.com", "imap.mail.yahoo.com", "imap.yandex.ru", "imap.mail.me.com" -> tag = "";
             case "imap.gmail.com" -> tag = "[Gmail]/";
-            case "imap-mail.outlook.com" -> tag = "[Outlook]/";
-            case "imap.mail.yahoo.com" -> tag = "[Yahoo]/";
-            case "imap.yandex.ru" -> tag = "";
-            case "imap.mail.me.com" -> tag = "[Me]/";
-            default -> tag = FolderName.substring(0, FolderName.lastIndexOf("/")) + "/";
-
+            default -> {}
         }
-    });
-
-        System.out.println(tag);
     }
 }

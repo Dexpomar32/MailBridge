@@ -34,7 +34,6 @@ public class AuthenticationController {
 
     @FXML
     private void initialize() {
-        setHostTextField();
         setImage();
         HostContainerVisibility();
         openSaveMbox(LoginButton);
@@ -42,13 +41,16 @@ public class AuthenticationController {
 
     private void openSaveMbox(Button button) {
         LoginButton.setOnAction(actionEvent -> {
-            if (UsernameTextField.getText().isEmpty() || PasswordField.getText().isEmpty()) {
+            if (UsernameTextField.getText().isEmpty() || PasswordField.getText().isEmpty() || (data.getHostVisibility() && HostTextField.getText().isEmpty())) {
                 showAlert();
             } else {
                 try {
                     data.setUsername(UsernameTextField.getText());
                     data.setPassword(PasswordField.getText());
                     data.setSSL(SSLCheckBox.selectedProperty().get());
+
+                    if (data.getHostVisibility())
+                        data.setImapAddress(HostTextField.getText());
 
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("SaveMessages.fxml"));
                     Parent root = loader.load();
@@ -80,9 +82,5 @@ public class AuthenticationController {
     private void setImage() {
         Image image = new Image(data.getImageURL());
         MailImageView.setImage(image);
-    }
-
-    private void setHostTextField() {
-        HostTextField.setText(data.getImapAddress());
     }
 }

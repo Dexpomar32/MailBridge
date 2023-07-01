@@ -23,7 +23,7 @@ import java.util.Objects;
 public class MainApplication extends Application {
     private double xOffset = 0;
     private double yOffset = 0;
-    DataSingleton data = DataSingleton.getInstance();
+    private final DataSingleton data = DataSingleton.getInstance();
 
     @Override
     public void start(Stage stage) throws IOException {
