@@ -1,6 +1,6 @@
 # MailBridge
 
-MailBridge is a JavaFX application designed to save messages from Gmail and Yandex Mail to Mbox, Mime, and EML formats. The application follows the Model-View-Controller (MVC) architectural pattern to ensure a clean and organized codebase.
+MailBridge is a JavaFX application designed to save messages from Gmail and Yandex Mail and other mails to Mbox, Mime, and EML formats. The application uses the imap protocol to save messages from email.
 
 ## Features
 
